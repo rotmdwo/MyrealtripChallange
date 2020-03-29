@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.android.synthetic.main.activity_news_list.*
 import org.jsoup.Jsoup
 import java.io.IOException
 
@@ -12,8 +14,15 @@ class NewsListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_news_list)
+
+        val adapter =NewsAdapter(this)
+        val layoutManager = LinearLayoutManager(this)
+        layoutManager.orientation = LinearLayoutManager.VERTICAL
+        recyclerView.layoutManager = layoutManager
+
         val mHandler = Handler()
         Thread(Runnable {
+
             try {
                 val doc = Jsoup.connect("https://news.google.com/rss?hl=ko&gl=KR&ceid=KR:ko").timeout(5000).get()
                 val items = doc.select("rss channel item")
@@ -32,11 +41,19 @@ class NewsListActivity : AppCompatActivity() {
                     val imageURL = docOfLink.select("head meta[property=og:image]").attr("content")
 
                     if(description.equals("")){ // meta[property=og:description] 태그 없으면
-                        Log.d("asdf","2")
                     } else{
-                        Log.d("asdf",description)
                         val words = description.split(" ")
-                        val set = words.toSet()
+                        val wordsIterator = words.iterator()
+                        val wordsLongerThan2Letters = ArrayList<String>()
+                        var i = 0
+                        while(wordsIterator.hasNext()){
+                            val wordLongerThan2Letter = wordsIterator.next()
+                            if(wordLongerThan2Letter.length>=2){
+                                wordsLongerThan2Letters.add(wordLongerThan2Letter)
+                            }
+                        }
+                        val set = wordsLongerThan2Letters.toSet()
+                        //val set = words.toSet()
                         //val nonRepeatedWords = Array<String>(set.size,init = { index -> "" })
                         //val numOfRepeats = Array<Int>(set.size,init = {index -> 0})
 
@@ -63,15 +80,15 @@ class NewsListActivity : AppCompatActivity() {
                                 else -> a.nonRepeatedWord.compareTo(b.nonRepeatedWord)
                             }
                         })
+
                         if(!nonRepeatedWords[0].nonRepeatedWord.equals("")) keyWords[0] = nonRepeatedWords[0].nonRepeatedWord
                         if(!nonRepeatedWords[1].nonRepeatedWord.equals("")) keyWords[1] = nonRepeatedWords[1].nonRepeatedWord
                         if(!nonRepeatedWords[2].nonRepeatedWord.equals("")) keyWords[2] = nonRepeatedWords[2].nonRepeatedWord
 
-                    }
-                    if(imageURL.equals("")){ // meta[property=og:image] 태그 없으면
-                        Log.d("asdf","3")
-                    } else{
-                        Log.d("asdf",imageURL)
+                        if(imageURL.equals("")){ // meta[property=og:image] 태그 없으면
+                        } else{
+                            adapter.addItem(News(title = title,description = description,keywords = keyWords,link = link,image = imageURL))
+                        }
                     }
                 }
             }catch (e : IOException){
@@ -79,7 +96,7 @@ class NewsListActivity : AppCompatActivity() {
                 e.printStackTrace()
             }
             mHandler.post{
-
+                recyclerView.adapter = adapter
             }
         }).start()
     }
