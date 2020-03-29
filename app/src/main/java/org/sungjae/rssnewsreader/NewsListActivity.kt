@@ -5,12 +5,12 @@ import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import kotlinx.android.synthetic.main.activity_news_list.*
 import org.jsoup.Jsoup
 import java.io.IOException
 
 class NewsListActivity : AppCompatActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_news_list)
@@ -20,7 +20,20 @@ class NewsListActivity : AppCompatActivity() {
         layoutManager.orientation = LinearLayoutManager.VERTICAL
         recyclerView.layoutManager = layoutManager
 
+
+
         val mHandler = Handler()
+        getNewsInThread(mHandler,adapter)
+
+        swipeLayout.setOnRefreshListener {
+            recyclerView.removeAllViewsInLayout()
+            adapter.deleteAllItem()
+            getNewsInThread(mHandler,adapter)
+            swipeLayout.setRefreshing(false)
+        }
+    }
+
+    fun getNewsInThread(mHandler: Handler, adapter: NewsAdapter){
         Thread(Runnable {
 
             try {
@@ -36,7 +49,10 @@ class NewsListActivity : AppCompatActivity() {
                         Log.d("","SSLprotocolexception를 일으키는 한국경제 뉴스는 가져오지 않음")
                         continue
                     }
-                    val docOfLink = Jsoup.connect(link).timeout(5000).ignoreHttpErrors(true).get()
+                    val docOfLink = Jsoup.connect(link)
+                        .timeout(5000)
+                        .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
+                        .ignoreHttpErrors(true).get()
                     val description = docOfLink.select("head meta[property=og:description]").attr("content")
                     val imageURL = docOfLink.select("head meta[property=og:image]").attr("content")
 
