@@ -1,6 +1,7 @@
 package org.sungjae.rssnewsreader
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -49,6 +50,14 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.ViewHolder>{
             keyword3.text = item.keywords[2]
             val options = RequestOptions().error(R.drawable.noimage)
             Glide.with(mContext).load(item.image).apply(options).into(imageView)  // 라이브러리: https://github.com/bumptech/glide
+
+            itemView.setOnClickListener {
+                val intent = Intent(mContext,WebViewActivity::class.java)
+                intent.putExtra("link",item.link)
+                intent.putExtra("title",item.title)
+                intent.putExtra("keywords",item.keywords)
+                mContext.startActivity(intent)
+            }
         }
     }
 

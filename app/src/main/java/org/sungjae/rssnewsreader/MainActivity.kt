@@ -17,6 +17,7 @@ class MainActivity : AppCompatActivity() {
             override fun run(){
                 val intent = Intent(applicationContext,NewsListActivity::class.java)
                 startActivity(intent)
+                finish()
             }
         }
         handler.postDelayed(task,delayedTime)

@@ -38,7 +38,7 @@ class NewsListActivity : AppCompatActivity() {
         Thread(Runnable {
 
             try {
-                val doc = Jsoup.connect("https://news.google.com/rss?hl=ko&gl=KR&ceid=KR:ko").timeout(50000).get()
+                val doc = Jsoup.connect("https://news.google.com/rss?hl=ko&gl=KR&ceid=KR:ko").timeout(5000).get()
                 val tempItems = doc.select("rss channel item")
                 items = tempItems
             }catch (e : IOException){
@@ -52,13 +52,9 @@ class NewsListActivity : AppCompatActivity() {
 
                             val title = item.select("title").text()
                             val link = item.select("link").text()
-                            val source = item.select("source").text()
-                            if(source.equals("한국경제")){
-                                Log.d("","SSLprotocolexception를 일으키는 한국경제 뉴스는 가져오지 않음")
 
-                            }
                             val docOfLink = Jsoup.connect(link)
-                                .timeout(50000)
+                                .timeout(5000)
                                 .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
                                 .ignoreHttpErrors(true).get()
                             val description = docOfLink.select("head meta[property=og:description]").attr("content")
