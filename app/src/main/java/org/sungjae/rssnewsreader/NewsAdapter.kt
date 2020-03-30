@@ -5,23 +5,22 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.NonNull
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import com.bumptech.glide.Glide // 라이브러리: https://github.com/bumptech/glide
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.newsitem.view.*
 
-class NewsAdapter : RecyclerView.Adapter<NewsAdapter.ViewHolder>{
+class NewsAdapter : RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     val mContext: Context
     private val items = ArrayList<News>()
 
-    constructor(context: Context){
+    constructor(context: Context) {
         this.mContext = context
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) : ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val itemView = inflater.inflate(R.layout.newsitem,parent,false)
+        val itemView = inflater.inflate(R.layout.newsitem,parent, false)
         return ViewHolder(itemView)
     }
 
@@ -42,35 +41,39 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.ViewHolder>{
         val keyword3 = itemView.keyword3
         val imageView = itemView.imageView
 
-        fun bind(item: News){
+        fun bind(item: News) {
             title.text = item.title
             content.text = item.description
             keyword1.text = item.keywords[0]
             keyword2.text = item.keywords[1]
             keyword3.text = item.keywords[2]
+
             val options = RequestOptions().error(R.drawable.noimage)
-            Glide.with(mContext).load(item.image).apply(options).into(imageView)  // 라이브러리: https://github.com/bumptech/glide
+            Glide.with(mContext)
+                .load(item.image)
+                .apply(options)
+                .into(imageView)
 
             itemView.setOnClickListener {
-                val intent = Intent(mContext,WebViewActivity::class.java)
-                intent.putExtra("link",item.link)
-                intent.putExtra("title",item.title)
-                intent.putExtra("keywords",item.keywords)
+                val intent = Intent(mContext, WebViewActivity::class.java)
+                intent.putExtra("link", item.link)
+                intent.putExtra("title", item.title)
+                intent.putExtra("keywords", item.keywords)
                 mContext.startActivity(intent)
             }
         }
     }
 
-    fun addItem(item: News){
+    fun addItem(item: News) {
         items.add(item)
     }
 
-    fun removeItem(index: Int){
+    fun removeItem(index: Int) {
         items.removeAt(index)
     }
 
-    fun deleteAllItem(){
-        while(items.size>1){
+    fun deleteAllItem() {
+        while (items.size > 1) {
             items.removeAt(0)
         }
     }
