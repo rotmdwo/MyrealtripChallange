@@ -1,7 +1,9 @@
 package org.sungjae.rssnewsreader
 
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.webkit.WebSettings
 import android.webkit.WebViewClient
 import kotlinx.android.synthetic.main.activity_web_view.*
 
@@ -18,9 +20,12 @@ class WebViewActivity : AppCompatActivity() {
         keyword1.text = keyWords[0]
         keyword2.text = keyWords[1]
         keyword3.text = keyWords[2]
-        webView.setWebViewClient(WebViewClient())
+        webView.settings.domStorageEnabled = true
+        webView.settings.setAppCacheEnabled(true)
+        webView.settings.loadsImagesAutomatically = true
+        webView.settings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+        webView.webViewClient = WebViewClient()
         webView.loadUrl(link)
-
         backButton.setOnClickListener{
             finish()
         }
