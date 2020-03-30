@@ -1,6 +1,7 @@
 package org.sungjae.rssnewsreader
 
 import android.os.Handler
+import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import org.jsoup.Jsoup  // 라이브러리: https://github.com/jhy/jsoup
@@ -50,9 +51,10 @@ fun getNewsInThread(mHandler: Handler, adapter: NewsAdapter, recyclerView: Recyc
                             val wordsIterator = words.iterator()
                             val wordsLongerThan2Letters = ArrayList<String>()
 
-                            while (wordsIterator.hasNext()) {  // 2글자 이상 단어만 걸러냄
+                            while (wordsIterator.hasNext()) {  // 2글자 이상 단어만 선택, 공백으로 이루어진 단어 제외, '...'으로 이루어진 의미 없는 키워드 제외
                                 val wordLongerThan2Letter = wordsIterator.next()
-                                if (wordLongerThan2Letter.length >= 2) {
+                                if (wordLongerThan2Letter.length >= 2 && !wordLongerThan2Letter.substring(0,2).equals("  ")) {
+                                    if(wordLongerThan2Letter.length >= 3 && wordLongerThan2Letter.substring(0,3).equals("...")) continue
                                     wordsLongerThan2Letters.add(wordLongerThan2Letter)
                                 }
                             }
@@ -80,9 +82,9 @@ fun getNewsInThread(mHandler: Handler, adapter: NewsAdapter, recyclerView: Recyc
                                 }
                             })
 
-                            if (!nonRepeatedWords[0].nonRepeatedWord.equals("")) keyWords[0] = nonRepeatedWords[0].nonRepeatedWord
-                            if (!nonRepeatedWords[1].nonRepeatedWord.equals("")) keyWords[1] = nonRepeatedWords[1].nonRepeatedWord
-                            if (!nonRepeatedWords[2].nonRepeatedWord.equals("")) keyWords[2] = nonRepeatedWords[2].nonRepeatedWord
+                            if (nonRepeatedWords.size >= 1 && !nonRepeatedWords[0].nonRepeatedWord.equals("")) keyWords[0] = nonRepeatedWords[0].nonRepeatedWord
+                            if (nonRepeatedWords.size >= 2 && !nonRepeatedWords[1].nonRepeatedWord.equals("")) keyWords[1] = nonRepeatedWords[1].nonRepeatedWord
+                            if (nonRepeatedWords.size >= 3 && !nonRepeatedWords[2].nonRepeatedWord.equals("")) keyWords[2] = nonRepeatedWords[2].nonRepeatedWord
 
                             adapter.addItem(News(title = title, description = description, keywords = keyWords, link = link, image = imageURL))
                         }
@@ -137,9 +139,10 @@ fun getNewsInThread(mHandler: Handler, adapter: NewsAdapter, recyclerView: Recyc
                             val wordsIterator = words.iterator()
                             val wordsLongerThan2Letters = ArrayList<String>()
 
-                            while (wordsIterator.hasNext()) {  // 2글자 이상 단어만 걸러냄
+                            while (wordsIterator.hasNext()) {  // 2글자 이상 단어만 선택, 공백으로 이루어진 단어 제외, '...'으로 이루어진 의미 없는 키워드 제외
                                 val wordLongerThan2Letter = wordsIterator.next()
-                                if (wordLongerThan2Letter.length >= 2) {
+                                if (wordLongerThan2Letter.length >= 2 && !wordLongerThan2Letter.substring(0,2).equals("  ")) {
+                                    if(wordLongerThan2Letter.length >= 3 && wordLongerThan2Letter.substring(0,3).equals("...")) continue
                                     wordsLongerThan2Letters.add(wordLongerThan2Letter)
                                 }
                             }

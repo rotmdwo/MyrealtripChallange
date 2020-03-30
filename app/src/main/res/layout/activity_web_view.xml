@@ -48,21 +48,24 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="TextView"
-                android:layout_marginLeft="5dp"/>
+                android:layout_marginLeft="5dp"
+                android:maxLength="15"/>
 
             <TextView
                 android:id="@+id/keyword2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="TextView" />
+                android:text="TextView"
+                android:maxLength="15"/>
 
             <TextView
                 android:id="@+id/keyword3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="TextView" />
+                android:text="TextView"
+                android:maxLength="15"/>
         </LinearLayout>
 
         <WebView
