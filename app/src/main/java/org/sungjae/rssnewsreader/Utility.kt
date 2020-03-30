@@ -44,19 +44,19 @@ fun getNewsInThread(mHandler: Handler, adapter: NewsAdapter, recyclerView: Recyc
                             .select("head meta[property=og:image]")
                             .attr("content")
 
-                        if (description.equals("")) { // meta[property=og:description] 태그 없으면
+                        if (description.equals("")) { // meta[property=og:description] 태그 없으면 패스
                         } else {
                             val words = description.split(" ")
                             val wordsIterator = words.iterator()
                             val wordsLongerThan2Letters = ArrayList<String>()
 
-                            while (wordsIterator.hasNext()) {
+                            while (wordsIterator.hasNext()) {  // 2글자 이상 단어만 걸러냄
                                 val wordLongerThan2Letter = wordsIterator.next()
-                                if(wordLongerThan2Letter.length>=2) {
+                                if (wordLongerThan2Letter.length >= 2) {
                                     wordsLongerThan2Letters.add(wordLongerThan2Letter)
                                 }
                             }
-                            val set = wordsLongerThan2Letters.toSet()
+                            val set = wordsLongerThan2Letters.toSet()  // 중복되는 글자 없게 세트로 거름
 
                             var nonRepeatedWords = Array<Words>(set.size, init = {index -> Words("",0)})
 
@@ -72,7 +72,7 @@ fun getNewsInThread(mHandler: Handler, adapter: NewsAdapter, recyclerView: Recyc
                                     }
                                 }
                             }
-                            nonRepeatedWords.sortWith(kotlin.Comparator<Words> { a: Words, b: Words ->
+                            nonRepeatedWords.sortWith(kotlin.Comparator<Words> { a: Words, b: Words ->  // 키워드를 반복횟수 내림차순, 문자정렬 오름차순으로 정렬
                                 when {
                                     a.numOfRepeats > b.numOfRepeats -> -1
                                     a.numOfRepeats < b.numOfRepeats -> 1
@@ -137,13 +137,13 @@ fun getNewsInThread(mHandler: Handler, adapter: NewsAdapter, recyclerView: Recyc
                             val wordsIterator = words.iterator()
                             val wordsLongerThan2Letters = ArrayList<String>()
 
-                            while (wordsIterator.hasNext()) {
+                            while (wordsIterator.hasNext()) {  // 2글자 이상 단어만 걸러냄
                                 val wordLongerThan2Letter = wordsIterator.next()
-                                if(wordLongerThan2Letter.length>=2) {
+                                if (wordLongerThan2Letter.length >= 2) {
                                     wordsLongerThan2Letters.add(wordLongerThan2Letter)
                                 }
                             }
-                            val set = wordsLongerThan2Letters.toSet()
+                            val set = wordsLongerThan2Letters.toSet()  // 중복되는 글자 없게 세트로 거름
 
                             var nonRepeatedWords = Array<Words>(set.size, init = {index -> Words("",0)})
 
@@ -159,7 +159,7 @@ fun getNewsInThread(mHandler: Handler, adapter: NewsAdapter, recyclerView: Recyc
                                     }
                                 }
                             }
-                            nonRepeatedWords.sortWith(kotlin.Comparator<Words> { a: Words, b: Words ->
+                            nonRepeatedWords.sortWith(kotlin.Comparator<Words> { a: Words, b: Words ->  // 키워드를 반복횟수 내림차순, 문자정렬 오름차순으로 정렬
                                 when {
                                     a.numOfRepeats > b.numOfRepeats -> -1
                                     a.numOfRepeats < b.numOfRepeats -> 1
@@ -182,7 +182,7 @@ fun getNewsInThread(mHandler: Handler, adapter: NewsAdapter, recyclerView: Recyc
                 }).start()
             }
         }
-        mHandler.post {  // 이 부분이 오버로딩 됨
+        mHandler.post {  // 이 부분이 오버로딩 됨, 리프레쉬 기능
             recyclerView.removeAllViewsInLayout()
             adapter.deleteAllItem()
             swipeLayout.setRefreshing(false)
