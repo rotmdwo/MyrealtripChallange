@@ -51,29 +51,65 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/keyword1"
+                <androidx.cardview.widget.CardView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textColor="#FF0000"
-                    android:text="TextView" />
+                    android:layout_height="match_parent"
+                    app:cardBackgroundColor="#000000"
+                    app:cardCornerRadius="5dp"
+                    app:cardElevation="5dp"
+                    android:layout_marginRight="5dp">
 
-                <TextView
-                    android:id="@+id/keyword2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textColor="#FF0000"
-                    android:text="TextView" />
+                    <TextView
+                        android:id="@+id/keyword1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="TextView"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"/>
+                </androidx.cardview.widget.CardView>
 
-                <TextView
-                    android:id="@+id/keyword3"
+
+                <androidx.cardview.widget.CardView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textColor="#FF0000"
-                    android:text="TextView" />
+                    android:layout_height="match_parent"
+                    app:cardBackgroundColor="#000000"
+                    app:cardCornerRadius="5dp"
+                    app:cardElevation="5dp"
+                    android:layout_marginRight="5dp">
+                    <TextView
+                        android:id="@+id/keyword2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold"
+                        android:text="TextView"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"/>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:cardBackgroundColor="#000000"
+                    app:cardCornerRadius="5dp"
+                    app:cardElevation="5dp"
+                    android:layout_marginRight="5dp">
+                    <TextView
+                        android:id="@+id/keyword3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold"
+                        android:text="TextView"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"/>
+                </androidx.cardview.widget.CardView>
+
+
+
+
             </LinearLayout>
 
 

@@ -22,14 +22,14 @@ class ExampleUnitTest {
     }
 
     @Test
-    fun stringOrderTest(){
+    fun stringOrder_test(){
         val ABC = "ABC"
         val BCD = "BCD"
         assertEquals(-1,ABC.compareTo(BCD))
     }
 
     @Test
-    fun WordsSortTest(){
+    fun wordsSort_test(){
         var words = Array<Words>(3,init={index -> Words("",0)})
         words[0].nonRepeatedWord = "ABC"
         words[0].numOfRepeats = 2
@@ -50,7 +50,7 @@ class ExampleUnitTest {
     }
 
     @Test
-    fun crawlingTest(){
+    fun crawling_test(){
         val mHandler = Handler()
         val doc = Jsoup.connect("https://news.google.com/rss?hl=ko&gl=KR&ceid=KR:ko").get()
         val items = doc.select("rss channel item")

@@ -33,6 +33,16 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         return items.size
     }
 
+    fun addItem(item: News) {
+        items.add(item)
+    }
+
+    fun deleteAllItem() {
+        while (items.size > 1) {
+            items.removeAt(0)
+        }
+    }
+
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val title = itemView.title
         val content = itemView.content
@@ -61,20 +71,6 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.ViewHolder> {
                 intent.putExtra("keywords", item.keywords)
                 mContext.startActivity(intent)
             }
-        }
-    }
-
-    fun addItem(item: News) {
-        items.add(item)
-    }
-
-    fun removeItem(index: Int) {
-        items.removeAt(index)
-    }
-
-    fun deleteAllItem() {
-        while (items.size > 1) {
-            items.removeAt(0)
         }
     }
 }
