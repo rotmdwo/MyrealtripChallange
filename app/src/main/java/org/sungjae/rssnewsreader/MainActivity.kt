@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
         getNewsInThread(mHandler, adapter, recyclerView)  // 처음 뉴스리스트 로딩
 
         swipeLayout.setOnRefreshListener {  // 리프레쉬
-            getNewsInThread(mHandler, adapter, recyclerView, swipeLayout = swipeLayout)
+            refreshNewsList(mHandler, adapter, recyclerView, swipeLayout)
         }
 
         val loadingHandler = Handler()
