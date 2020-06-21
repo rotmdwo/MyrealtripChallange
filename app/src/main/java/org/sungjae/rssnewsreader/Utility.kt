@@ -1,6 +1,7 @@
 package org.sungjae.rssnewsreader
 
 import android.os.Handler
+import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import org.jsoup.Jsoup  // 라이브러리: https://github.com/jhy/jsoup
@@ -8,9 +9,10 @@ import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 import java.io.IOException
 
-const val TIMEOUT_LIMIT = 5000
+const val TIMEOUT_LIMIT = 10000
 const val RSS_ADDRESS = "https://news.google.com/rss?hl=ko&gl=KR&ceid=KR:ko"
 const val USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0"
+var numOfValidArticles = 0
 
 fun getNewsArticles(url: String, cssQuery: String): Elements{
     val doc = Jsoup.connect(url)
@@ -61,17 +63,19 @@ fun findKeywords(keyWords: Array<String>, description: String){
     if (nonRepeatedWords.size >= 3 && !nonRepeatedWords[2].nonRepeatedWord.equals("")) keyWords[2] = nonRepeatedWords[2].nonRepeatedWord
 }
 
-fun parseArticle(adapter: NewsAdapter, item: Element) {
+fun parseArticle(articleList: ArrayList<Article>, index: Int, item: Element): Boolean {
     try {
         val keyWords = Array<String>(3, {""})
 
-        val title = item.select("title").text()
+        //val title = item.select("title").text()
+        val title = "" + index + " " + item.select("title").text()
         val link = item.select("link").text()
 
         val docOfLink = Jsoup.connect(link)
             .timeout(TIMEOUT_LIMIT)
             .userAgent(USER_AGENT)
             .ignoreHttpErrors(true)
+            .ignoreContentType(true)
             .get()
         val description = docOfLink
             .select("head meta[property=og:description]")
@@ -81,17 +85,28 @@ fun parseArticle(adapter: NewsAdapter, item: Element) {
             .attr("content")
 
         if (description.equals("")) { // meta[property=og:description] 태그 없으면 패스
+            numOfValidArticles--
+            return false
         } else {
             findKeywords(keyWords, description)
-            adapter.addItem(News(title = title, description = description, keywords = keyWords, link = link, image = imageURL))
+            val news = News(title = title, description = description, keywords = keyWords, link = link, image = imageURL)
+            val article = Article(index, news)
+            articleList.add(article)
+            return true
+            //adapter.addItem(News(title = title, description = description, keywords = keyWords, link = link, image = imageURL))
         }
     } catch (e: IOException) {
         e.printStackTrace()
+        return false
     }
 }
 
 fun getNewsInThread(mHandler: Handler, adapter: NewsAdapter, recyclerView: RecyclerView) { // 처음 로딩 시 뉴스리스트를 가져오는 메소드
     var items = Elements()
+    val articleList = ArrayList<Article>(20)
+    var index = 0
+    numOfValidArticles = 0
+
     Thread(Runnable {
         try {
             items = getNewsArticles(RSS_ADDRESS, "rss channel item")
@@ -99,13 +114,23 @@ fun getNewsInThread(mHandler: Handler, adapter: NewsAdapter, recyclerView: Recyc
             e.printStackTrace()
         }
         mHandler.post {
+            numOfValidArticles = items.size
+            var numOfProcessedArticles = 0
+
             for (item in items) {
                 Thread(Runnable {
                     item?.let {
-                        parseArticle(adapter, item)
+                        if (parseArticle(articleList, ++index, item)) numOfProcessedArticles++
                     }
                     mHandler.post {
-                        recyclerView.adapter = adapter
+                        //recyclerView.adapter = adapter
+                        if (numOfValidArticles == numOfProcessedArticles) {
+                            articleList.sortWith(articleComparator)
+                            for (i in 0 until numOfValidArticles) {
+                                adapter.addItem(articleList.get(i).news)
+                            }
+                            recyclerView.adapter = adapter
+                        }
                     }
                 }).start()
             }
@@ -114,8 +139,19 @@ fun getNewsInThread(mHandler: Handler, adapter: NewsAdapter, recyclerView: Recyc
 }
 
 fun refreshNewsList(mHandler: Handler, adapter: NewsAdapter, recyclerView: RecyclerView, swipeLayout: SwipeRefreshLayout) { // 새로고침 시 뉴스리스트를 가져오는 메소드
-    getNewsInThread(mHandler, adapter, recyclerView)
     recyclerView.removeAllViewsInLayout()
     adapter.deleteAllItem()
+    getNewsInThread(mHandler, adapter, recyclerView)
     swipeLayout.setRefreshing(false)
+}
+
+class Article(val index: Int, val news: News){
+}
+
+object articleComparator: Comparator<Article> {
+    override fun compare(p0: Article, p1: Article): Int {
+        if (p0.index < p1.index) return -1
+        else if (p0.index > p1.index) return 1
+        else return 0
+    }
 }
