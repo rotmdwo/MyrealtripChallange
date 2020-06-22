@@ -38,7 +38,7 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     }
 
     fun deleteAllItem() {
-        while (items.size > 1) {
+        while (items.size > 0) {
             items.removeAt(0)
         }
     }
