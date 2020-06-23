@@ -20,3 +20,10 @@
 <p>● 코딩컨벤션에 맞춰 코드를 작성하려고 노력하였다.</p>
 <p>● OnCreate 메소드 안에서는 최대한 코드를 줄이고, 기능구현 메소드는 유틸리티 클래스로 뺴두었다.</p>
 <p>● 단위테스트 함수를 써보려고 노력하였다.</p>
+
+<h1> 결과 </h1>
+<img src="https://github.com/rotmdwo/MyrealtripChallange/blob/master/Screenshots/K-034.png?raw=true">
+<img src="https://github.com/rotmdwo/MyrealtripChallange/blob/master/Screenshots/K-035.png?raw=true">
+
+<h1> 지적사항 수정 </h1>
+
